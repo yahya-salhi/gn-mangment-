@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import equipmentRoutes from "./routes/equipment.routes.js";
+import deliveryRoutes from "./routes/delivery.routes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.get("/health", (req, res) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/equipment", equipmentRoutes);
+app.use("/api/delivery", deliveryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

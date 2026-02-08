@@ -43,8 +43,30 @@ model EquipmentReception {
   minimumThreshold Int
   sendingDept     String
   receptionDate   DateTime
+  reference       String?
+  referenceNumber String
+  referenceDate   DateTime
   notes           String?
   createdBy       Int
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+model EquipmentDelivery {
+  id                Int       @id @default(autoincrement())
+  equipmentName     String
+  category          String
+  quantity          Int
+  beneficiaryUnit   String
+  beneficiary       String
+  receiver          String
+  deliveredBy       Int
+  deliveryDate      DateTime
+  referenceNumber   String
+  referenceDate     DateTime
+  warehouseManager  String
+  unitHead          String
+  notes             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }

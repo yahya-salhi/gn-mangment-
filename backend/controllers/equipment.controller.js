@@ -5,12 +5,34 @@ const prisma = new PrismaClient();
 // Create Equipment Reception (Create)
 export const createEquipmentReception = async (req, res) => {
   try {
-    const { equipmentName, category, quantity, minimumThreshold, sendingDept, receptionDate, notes } = req.body;
+    const {
+      equipmentName,
+      category,
+      quantity,
+      minimumThreshold,
+      sendingDept,
+      receptionDate,
+      reference,
+      referenceNumber,
+      referenceDate,
+      notes,
+    } = req.body;
     const userId = req.user.id;
 
     // Validate required fields
-    if (!equipmentName || !category || !quantity || !minimumThreshold || !sendingDept || !receptionDate) {
-      return res.status(400).json({ message: "All required fields must be provided" });
+    if (
+      !equipmentName ||
+      !category ||
+      !quantity ||
+      !minimumThreshold ||
+      !sendingDept ||
+      !receptionDate ||
+      !referenceNumber ||
+      !referenceDate
+    ) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be provided" });
     }
 
     const equipment = await prisma.equipmentReception.create({
@@ -21,12 +43,19 @@ export const createEquipmentReception = async (req, res) => {
         minimumThreshold: parseInt(minimumThreshold),
         sendingDept,
         receptionDate: new Date(receptionDate),
+        reference: reference || null,
+        referenceNumber,
+        referenceDate: new Date(referenceDate),
         notes: notes || null,
         createdBy: userId,
       },
     });
 
-    console.log(`✅ Equipment created:`, { id: equipment.id, name: equipment.equipmentName, quantity: equipment.quantity });
+    console.log(`✅ Equipment created:`, {
+      id: equipment.id,
+      name: equipment.equipmentName,
+      quantity: equipment.quantity,
+    });
 
     return res.status(201).json({
       message: "Equipment reception recorded successfully",
@@ -34,7 +63,9 @@ export const createEquipmentReception = async (req, res) => {
     });
   } catch (error) {
     console.error("Create equipment error:", error);
-    return res.status(500).json({ message: "Failed to create equipment reception" });
+    return res
+      .status(500)
+      .json({ message: "Failed to create equipment reception" });
   }
 };
 
@@ -54,7 +85,9 @@ export const getAllEquipmentReceptions = async (req, res) => {
     });
   } catch (error) {
     console.error("Get equipments error:", error);
-    return res.status(500).json({ message: "Failed to retrieve equipment receptions" });
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve equipment receptions" });
   }
 };
 
@@ -71,7 +104,10 @@ export const getEquipmentReceptionById = async (req, res) => {
       return res.status(404).json({ message: "Equipment reception not found" });
     }
 
-    console.log(`✅ Retrieved equipment:`, { id: equipment.id, name: equipment.equipmentName });
+    console.log(`✅ Retrieved equipment:`, {
+      id: equipment.id,
+      name: equipment.equipmentName,
+    });
 
     return res.status(200).json({
       message: "Equipment reception retrieved successfully",
@@ -79,7 +115,9 @@ export const getEquipmentReceptionById = async (req, res) => {
     });
   } catch (error) {
     console.error("Get equipment error:", error);
-    return res.status(500).json({ message: "Failed to retrieve equipment reception" });
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve equipment reception" });
   }
 };
 
@@ -87,7 +125,18 @@ export const getEquipmentReceptionById = async (req, res) => {
 export const updateEquipmentReception = async (req, res) => {
   try {
     const { id } = req.params;
-    const { equipmentName, category, quantity, minimumThreshold, sendingDept, receptionDate, notes } = req.body;
+    const {
+      equipmentName,
+      category,
+      quantity,
+      minimumThreshold,
+      sendingDept,
+      receptionDate,
+      reference,
+      referenceNumber,
+      referenceDate,
+      notes,
+    } = req.body;
 
     const equipment = await prisma.equipmentReception.findUnique({
       where: { id: parseInt(id) },
@@ -103,14 +152,26 @@ export const updateEquipmentReception = async (req, res) => {
         equipmentName: equipmentName || equipment.equipmentName,
         category: category || equipment.category,
         quantity: quantity ? parseInt(quantity) : equipment.quantity,
-        minimumThreshold: minimumThreshold ? parseInt(minimumThreshold) : equipment.minimumThreshold,
+        minimumThreshold: minimumThreshold
+          ? parseInt(minimumThreshold)
+          : equipment.minimumThreshold,
         sendingDept: sendingDept || equipment.sendingDept,
-        receptionDate: receptionDate ? new Date(receptionDate) : equipment.receptionDate,
+        receptionDate: receptionDate
+          ? new Date(receptionDate)
+          : equipment.receptionDate,
+        reference: reference !== undefined ? reference : equipment.reference,
+        referenceNumber: referenceNumber || equipment.referenceNumber,
+        referenceDate: referenceDate
+          ? new Date(referenceDate)
+          : equipment.referenceDate,
         notes: notes !== undefined ? notes : equipment.notes,
       },
     });
 
-    console.log(`✅ Equipment updated:`, { id: updatedEquipment.id, name: updatedEquipment.equipmentName });
+    console.log(`✅ Equipment updated:`, {
+      id: updatedEquipment.id,
+      name: updatedEquipment.equipmentName,
+    });
 
     return res.status(200).json({
       message: "Equipment reception updated successfully",
@@ -118,7 +179,9 @@ export const updateEquipmentReception = async (req, res) => {
     });
   } catch (error) {
     console.error("Update equipment error:", error);
-    return res.status(500).json({ message: "Failed to update equipment reception" });
+    return res
+      .status(500)
+      .json({ message: "Failed to update equipment reception" });
   }
 };
 
@@ -147,7 +210,9 @@ export const deleteEquipmentReception = async (req, res) => {
     });
   } catch (error) {
     console.error("Delete equipment error:", error);
-    return res.status(500).json({ message: "Failed to delete equipment reception" });
+    return res
+      .status(500)
+      .json({ message: "Failed to delete equipment reception" });
   }
 };
 
@@ -168,7 +233,9 @@ export const getEquipmentByCategory = async (req, res) => {
     });
   } catch (error) {
     console.error("Get equipment by category error:", error);
-    return res.status(500).json({ message: "Failed to retrieve equipment by category" });
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve equipment by category" });
   }
 };
 
@@ -191,6 +258,8 @@ export const getLowStockEquipment = async (req, res) => {
     });
   } catch (error) {
     console.error("Get low stock error:", error);
-    return res.status(500).json({ message: "Failed to retrieve low stock equipment" });
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve low stock equipment" });
   }
 };

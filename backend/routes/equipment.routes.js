@@ -19,8 +19,8 @@ router.use(authMiddleware);
 // Create equipment reception (Manager, Admin)
 router.post(
   "/",
-  roleMiddleware("MANAGER", "ADMIN"),
-  createEquipmentReception
+  roleMiddleware("MANAGER", "ADMIN", "USER"),
+  createEquipmentReception,
 );
 
 // Get all equipment receptions
@@ -39,14 +39,14 @@ router.get("/:id", getEquipmentReceptionById);
 router.put(
   "/:id",
   roleMiddleware("MANAGER", "ADMIN"),
-  updateEquipmentReception
+  updateEquipmentReception,
 );
 
 // Delete equipment reception (Admin only)
 router.delete(
   "/:id",
-  roleMiddleware("ADMIN"),
-  deleteEquipmentReception
+  roleMiddleware("MANAGER", "ADMIN"),
+  deleteEquipmentReception,
 );
 
 export default router;
